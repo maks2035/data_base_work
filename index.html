@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Table Filter</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+    <input class="input" type="text" id="fname" name="fname"><br>
+    <button id="searchButton" onclick="call()">Search</button>
+    
+    <table class="table" id="table">
+            <tr class ="htr">
+                <th class = "ID"> ID </th>
+                <th class = "Name"> Name </th>
+                <th class = "Type"> Type </th>
+                <th class = "Year"> Year of Production </th>
+            </tr>
+    </table>
+</body>
+<script>
+    function readServerString(url, callback) {
+        var req = new XMLHttpRequest()
+        req.onreadystatechange = function() {
+            if (req.readyState === 4) {
+                callback(undefined, req.responseText); 
+            } else {
+                callback(new Error(req.status)); 
+            }
+        } 
+        req.open("GET", url, true);
+        req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
+        req.send();
+    }
+    function call() {
+        var val = "/?fname=" + document.getElementById("fname").value
+        readServerString(val, function(err, response) {
+            
+            table = document.getElementById('table')
+
+            query = document.getElementsByClassName('tr')
+            for (q of query){
+                q.remove();
+            }
+            for (q of query){
+                q.remove();
+            }
+
+            let text = "";
+            tb = document.getElementById('table');
+            if (!err){
+                myObj = JSON.parse(response);
+                for (let i in myObj){
+                    tr = document.createElement('tr')
+                    tr.className = 'tr'
+                    td_1 = document.createElement('td')
+                    td_1.textContent = myObj[i].id
+                    td_1.className = "ID"
+                    td_2 = document.createElement('td')
+                    td_2.textContent = myObj[i].name
+                    td_2.className = "Name"
+                    td_3 = document.createElement('td')
+                    td_3.textContent = myObj[i].type
+                    td_2.className = "Type"
+                    td_4 = document.createElement('td')
+                    td_4.textContent = myObj[i].year_of_production 
+                    td_2.className = "Year"
+
+                    tr.appendChild(td_1);
+                    tr.appendChild(td_2);
+                    tr.appendChild(td_3);
+                    tr.appendChild(td_4);
+                    tb.appendChild(tr)
+                }
+
+                document.getElementById('table').appendChild(tb);
+            }
+        });
+    }
+</script>
+</html>
